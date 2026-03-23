@@ -1,28 +1,26 @@
 "use client";
 
-import { use } from "react";
-import { useRouter } from "next/navigation";
-import { useBlog } from "@/hooks/useBlog";
-import { BlogPostForm } from "@/components/forms/BlogPostForm";
-import { Loader2 } from "lucide-react";
-import type { BlogPost } from "@/lib/api";
+import { use }            from "react";
+import { useRouter }      from "next/navigation";
+import { useBlog }        from "@/hooks/useBlog";
+import { BlogPostForm }   from "@/components/forms/BlogPostForm";
+import { Loader2 }        from "lucide-react";
+import type { BlogPost }  from "@/lib/api";
 
 export default function EditBlogPostPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  // ✅ Unwrap params Promise
-  const { id } = use(params);
-
+  const { id }                      = use(params);
   const { posts, isLoading, updatePost } = useBlog();
-  const router = useRouter();
+  const router                      = useRouter();
 
   const post = posts.find((p) => p.id === id);
 
-  const handleUpdate = async (data: Partial<BlogPost>) => {
-    const result = await updatePost(id, data);
-    return result;
+  const handleUpdate = async (data: Partial<BlogPost>): Promise<void> => {
+    await updatePost(id, data);
+    router.push("/blog");
   };
 
   if (isLoading) {
@@ -50,19 +48,3 @@ export default function EditBlogPostPage({
     />
   );
 }
-// ```
-
-// ---
-
-// ## What changed and why
-// ```
-// Next.js 14:
-//   params = { id: "abc-123" }        ← plain object, access directly
-//   params.id = "abc-123"             ← works fine
-
-// Next.js 15 (what you have):
-//   params = Promise<{ id: "abc-123" }> ← wrapped in Promise
-//   params.id = undefined               ← Promise has no .id property!
-  
-//   Fix: const { id } = use(params)   ← React.use() unwraps the Promise
-//                                        synchronously during render
