@@ -81,7 +81,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=[origin.strip() for origin in settings.CORS_ORIGINS.split(",")],
     # ["http://localhost:3000", "http://localhost:3001"]
     allow_credentials=True,
     allow_methods=["*"],    # allow GET, POST, PUT, DELETE etc.

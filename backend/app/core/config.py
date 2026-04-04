@@ -8,13 +8,15 @@ Clean, typed, and autocomplete works in VS Code.
 """
 
 from pydantic_settings import BaseSettings
-from typing import List
+
 
 
 class Settings(BaseSettings):
     # App
     APP_ENV: str = "development"
-    CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:3001"]
+    # CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:3001"]
+    CORS_ORIGINS: str = "http://localhost:3000,http://localhost:3001"
+
 
     # Database
     DATABASE_URL: str
